@@ -305,22 +305,23 @@ function showGallery() {
 
     let current = 0;
 
-    function nextPhoto() {
-        photo.src = photos[current].file;
+    function showNext() {
+        photo.src = photos[current].file + "?t=" + Date.now();
         caption.textContent = photos[current].text;
 
-        if (current === photos.length - 1) {
+        current++;
+
+        if (current < photos.length) {
+            setTimeout(showNext, 3000);
+        } else {
             setTimeout(() => {
                 gallery.style.display = "none";
                 finalMessage.style.display = "block";
             }, 3000);
-        } else {
-            current++;
-            setTimeout(nextPhoto, 3000);
         }
     }
 
-    nextPhoto();
+    showNext();
 }
 const canvas = document.getElementById("hearts");
 const ctx = canvas.getContext("2d");
