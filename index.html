@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Ajoke ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#000;
+    color:#33ff33;
+    font-family:"Courier New",monospace;
+    overflow:hidden;
+}
+
+#terminal{
+    width:90%;
+    max-width:900px;
+    margin:30px auto;
+    border:2px solid #33ff33;
+    border-radius:15px;
+    padding:20px;
+    min-height:80vh;
+    box-shadow:0 0 25px rgba(0,255,0,0.3);
+    background:rgba(0,0,0,0.9);
+    overflow-y:auto;
+}
+
+#output{
+    white-space:pre-wrap;
+    line-height:1.8;
+    font-size:17px;
+}
+
+#input-container{
+    display:none;
+    margin-top:20px;
+}
+
+#password{
+    width:100%;
+    background:black;
+    color:#33ff33;
+    border:1px solid #33ff33;
+    padding:12px;
+    font-size:18px;
+    outline:none;
+    font-family:inherit;
+}
+
+#gallery{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    background:rgba(0,0,0,0.92);
+    z-index:1000;
+}
+
+#gallery img{
+    width:85%;
+    max-height:65%;
+    object-fit:contain;
+    border-radius:20px;
+    border:3px solid #ff66aa;
+    box-shadow:0 0 40px #ff66aa;
+}
+
+#caption{
+    color:white;
+    margin-top:20px;
+    text-align:center;
+    width:90%;
+    line-height:1.7;
+    font-size:20px;
+}
+
+#finalMessage{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.95);
+    color:white;
+    padding:30px;
+    overflow:auto;
+    z-index:2000;
+    line-height:1.9;
+    font-size:20px;
+}
+
+#finalMessage h1{
+    color:#ff66aa;
+    text-align:center;
+    margin-bottom:25px;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:scale(.95);
+    }
+
+    to{
+        opacity:1;
+        transform:scale(1);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+    <source src="happy_birthday.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="hearts"></canvas>
+
+<div id="terminal">
+    <div id="output"></div>
+
+    <div id="input-container">
+        <input
+            id="password"
+            type="password"
+            placeholder="Enter birthday code (DDMM)"
+        >
+    </div>
+</div>
+
+<div id="gallery">
+    <img id="photo" src="">
+    <div id="caption"></div>
+</div>
+
+<div id="finalMessage">
+    <h1>🎂 Happy Birthday, Bashorun Itunuoluwa Ajoke ❤️</h1>
+
+    <p>
+    Ajoke mi,
+
+    Lónìí kì í ṣe ọjọ́ ìbí lasan.
+
+    Ó jẹ́ ọjọ́ tí Ọlọ́run fi ẹ̀bùn kan tó ṣeyebíye sí ayé.
+
+    Mo dúpẹ́ pé mo rí ẹni tí ọkàn mi fẹ́.
+
+    Kí ayọ̀ má bà ọ lọ́wọ́.
+
+    Kí àlàáfíà Ọlọ́run máa bá ọ rìn.
+
+    Kí gbogbo àlá rẹ ṣẹ.
+
+    Happy Birthday to the woman whose smile brightens my world.
+
+    Pẹ̀lú gbogbo ìfẹ́ mi,
+
+    <br><br>
+
+    <strong>Ola ❤️</strong>
+    </p>
+</div>
+
+<script>
+const PASSWORD = "0407";
+
+const photos = [
+{
+file:"./photo1.jpg",
+text:"The smile that brightens my world. ❤️"
+},
+{
+file:"./photo2.jpg",
+text:"Happy Birthday, Bashorun Itunuoluwa Ajoke. 🎂"
+},
+{
+file:"./photo3.jpg",
+text:"Every memory with you is a treasure. ✨"
+},
+{
+file:"./photo4.jpg",
+text:"Thank you for being a blessing in my life. 💕"
+},
+{
+file:"./photo5.jpg",
+text:"Kí Ọlọ́run bù kún ọjọ́ tuntun rẹ. 🌹"
+}
+];
+const output = document.getElementById("output");
+const inputContainer = document.getElementById("input-container");
+const passwordInput = document.getElementById("password");
+const gallery = document.getElementById("gallery");
+const photo = document.getElementById("photo");
+const caption = document.getElementById("caption");
+const finalMessage = document.getElementById("finalMessage");
+const music = document.getElementById("music");
+
+const terminalLines = [
+"========================================",
+" SECURE BIRTHDAY TERMINAL v3.0 ",
+"========================================",
+"",
+"> Booting celebration system...",
+"> Loading memories...",
+"> Decrypting love packets...",
+"> Authenticating recipient...",
+"",
+"Recipient: Bashorun Itunuoluwa Ajoke",
+"Sender: Ola ❤️",
+"",
+"Ajoke mi, ayọ̀ ayé mi...",
+"Lónìí jẹ́ ọjọ́ pàtàkì gan-an.",
+"Today, heaven celebrates your existence.",
+"",
+"> To unlock your birthday surprise,",
+"> Enter your birth date in DDMM format."
+];
+
+let lineIndex = 0;
+
+function typeLine() {
+
+    if (lineIndex >= terminalLines.length) {
+        inputContainer.style.display = "block";
+        passwordInput.focus();
+        return;
+    }
+
+    const line = terminalLines[lineIndex];
+    let charIndex = 0;
+
+    const interval = setInterval(() => {
+
+        if (charIndex < line.length) {
+            output.textContent += line[charIndex];
+            charIndex++;
+        } else {
+            clearInterval(interval);
+            output.textContent += "\n";
+            lineIndex++;
+            setTimeout(typeLine, 300);
+        }
+
+    }, 35);
+
+}
+
+typeLine();
+
+passwordInput.addEventListener("keydown", e => {
+
+    if (e.key !== "Enter") return;
+
+    if (passwordInput.value.trim() === PASSWORD) {
+
+        output.textContent +=
+        "\n\n>>> ACCESS GRANTED ❤️\n";
+
+        inputContainer.style.display = "none";
+
+        music.play().catch(() => {});
+
+        startHearts();
+
+        setTimeout(showGallery, 1000);
+
+    } else {
+
+        output.textContent +=
+        "\n>>> WRONG PASSWORD. Try again.\n";
+
+        passwordInput.value = "";
+    }
+
+});
+// ===============================
+// AUTO PHOTO SLIDESHOW
+// ===============================
+
+function showGallery() {
+
+    gallery.style.display = "flex";
+
+    let current = 0;
+
+    function nextPhoto() {
+
+        photo.style.animation = "fadeIn 1s";
+
+        photo.src = photos[current].file;
+        caption.innerHTML = photos[current].text;
+
+        current++;
+
+        if (current >= photos.length) {
+
+            setTimeout(() => {
+
+                gallery.style.display = "none";
+                finalMessage.style.display = "block";
+
+            }, 3000);
+
+            return;
+        }
+
+        setTimeout(nextPhoto, 3000);
+    }
+
+    nextPhoto();
+}
+
+
+// ===============================
+// FLOATING HEARTS
+// ===============================
+
+const canvas = document.getElementById("hearts");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+let hearts = [];
+
+class Heart {
+
+    constructor() {
+
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + 20;
+
+        this.size = Math.random() * 20 + 12;
+
+        this.speed = Math.random() * 1.5 + 0.5;
+
+        this.alpha = Math.random() * 0.5 + 0.5;
+    }
+
+    update() {
+        this.y -= this.speed;
+    }
+
+    draw() {
+
+        ctx.save();
+
+        ctx.globalAlpha = this.alpha;
+        ctx.font = `${this.size}px Arial`;
+
+        ctx.fillText("❤️", this.x, this.y);
+
+        ctx.restore();
+    }
+}
+
+function startHearts() {
+
+    setInterval(() => {
+
+        hearts.push(new Heart());
+
+        if (hearts.length > 100) {
+            hearts.shift();
+        }
+
+    }, 300);
+
+    animateHearts();
+}
+
+function animateHearts() {
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    hearts.forEach(h => {
+        h.update();
+        h.draw();
+    });
+
+    requestAnimationFrame(animateHearts);
+}
+</script>
+
+</body>
+</html>
