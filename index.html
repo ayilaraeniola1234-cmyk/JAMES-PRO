@@ -295,44 +295,33 @@ passwordInput.addEventListener("keydown", e => {
 // AUTO PHOTO SLIDESHOW
 // ===============================
 
-function showGallery() {
-
-    gallery.style.display = "flex";
-
-    let current = 0;
-
-    function nextPhoto() {
-
-        photo.style.animation = "fadeIn 1s";
-
-        photo.src = photos[current].file;
-        caption.innerHTML = photos[current].text;
-
-        current++;
-
-        if (current >= photos.length) {
-
-            setTimeout(() => {
-
-                gallery.style.display = "none";
-                finalMessage.style.display = "block";
-
-            }, 3000);
-
-            return;
-        }
-
-        setTimeout(nextPhoto, 3000);
-    }
-
-    nextPhoto();
-}
 
 
 // ===============================
 // FLOATING HEARTS
 // ===============================
+function showGallery() {
+    gallery.style.display = "flex";
 
+    let current = 0;
+
+    function nextPhoto() {
+        photo.src = photos[current].file;
+        caption.textContent = photos[current].text;
+
+        if (current === photos.length - 1) {
+            setTimeout(() => {
+                gallery.style.display = "none";
+                finalMessage.style.display = "block";
+            }, 3000);
+        } else {
+            current++;
+            setTimeout(nextPhoto, 3000);
+        }
+    }
+
+    nextPhoto();
+}
 const canvas = document.getElementById("hearts");
 const ctx = canvas.getContext("2d");
 
